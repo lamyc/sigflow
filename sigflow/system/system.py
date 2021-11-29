@@ -70,19 +70,23 @@ class System(Block):
         if not self._set:
             raise ValueError("self.input_blocks is not set."
                              "Set it by using self.set_blocks method.")
+        
         ## for short hand
         inputs = self.inputs
         pending = self._pending
         visited = {}.fromkeys(self.blocks.keys(), False)
+        
         ## block waiting to process in breadth first search method,
         ## may have duplicates
         queue = []
+
         ## reset to block input=list of zero if block mutated
         for ids, data in pending.items():
             if ids != "input" and ids != "output":
                 length = self.blocks[ids].ninput
                 if len(data) != length:
                     pending[ids] = [0.]*length
+        
         ## setting input to the system to blocks' inputs
         for from_port in range(self.ninput):
             for target_id, to_port in self._succ["input"][from_port].items():
@@ -106,6 +110,7 @@ class System(Block):
                 current_block.inputs = pending[current_id]
             else:
                 current_block.inputs = pending[current_id][0]
+        
             ## process input to output
             tmp_output = current_block.output
 
@@ -164,6 +169,7 @@ class System(Block):
             'output' indicates system's output
         from_port : int, optional
             The output port to connect from.
+        if isinstance(edge_from, Block):
             out_port must be smaller than noutput of the block.
             Defaults to 0.
         to_port : int, optional
@@ -173,6 +179,7 @@ class System(Block):
         """
         self._check_block_exists(edge_from)
         self._check_block_exists(edge_to)
+
         if isinstance(edge_from, Block):
             from_id = self._ids[edge_from]
         else:
@@ -182,7 +189,7 @@ class System(Block):
         else:
             to_id = edge_to
 
-        ## check valid port
+        ## check for valid function parameter
         if from_id == "input":
             nport = self.ninput
         else:
