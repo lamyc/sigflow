@@ -19,6 +19,7 @@ def to_array(value, types=None):
     """
     value = np.atleast_1d(value)
 
+    ## type checking
     if types is not None:
         for val in value:
             if not isinstance(val, types):

@@ -1,8 +1,9 @@
 import numpy as np
+from abc, import ABC, abstractmethod
 
 """Elements in a block diagram
 """
-class Block:
+class Block(ABC):
     """A general block base class
 
     Attributes
@@ -59,6 +60,7 @@ class Block:
         self.inputs = inputs
         return self.output
 
+    @abstractmethod
     def _i2o(self):
         """Method to convert the input signal to an output signal.
 
